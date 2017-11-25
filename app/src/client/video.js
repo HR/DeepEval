@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MediaCapturer from 'react-multimedia-capture';
 import imageBus from './socket';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class VideoExample extends React.Component {
 	constructor() {
@@ -152,10 +153,10 @@ class VideoExample extends React.Component {
 						<p>Rejected Reason: {rejectedReason}</p>
 						<p>Recording: {recording.toString()}</p>
 						<p>Paused: {paused.toString()}</p>
-						<button onClick={start}>Start</button>
-						<button onClick={stop}>Stop</button>
-						<button onClick={pause}>Pause</button>
-						<button onClick={resume}>Resume</button>
+						<RaisedButton onClick={start} label="Start" />
+						<RaisedButton onClick={stop} label="Stop" />
+						<RaisedButton onClick={pause} label="Pause" />
+						<RaisedButton onClick={resume} label="Resume" />
 
 						<p>Streaming test</p>
 						<video autoPlay></video>
