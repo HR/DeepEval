@@ -47,14 +47,19 @@ const server = http.createServer(app)
  */
 
 server.listen(PORT)
-console.log(`deepeval is alive. Running on :${PORT}`)
-server.on('error', utils.onError)
-server.on('listening', () => {
+
+/**
+ * Server event handling
+ */
+server.on('error', (err) => {
+  throw error
+})
+server.on('listening', (err) => {
   let addr = server.address()
   let bind = typeof addr === 'string' ?
     'pipe ' + addr :
     'port ' + addr.port
-  debug('Listening on ' + bind)
+  debug('DeepEval is alive on ' + bind)
 })
 
 // const websocket = socketio(server)
