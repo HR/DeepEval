@@ -69,10 +69,34 @@ class VideoExample extends React.Component {
 
 		if(window.URL) {
 			video.src = window.URL.createObjectURL(stream);
+			console.log(stream)
+			const track = stream.getVideoTracks()[0]
+			this.captureFrame(track)
+			setInterval(function(){ this.captureFrame(track) }.bind(this), 1000);
 		}
 		else {
 			video.src = stream;
 		}
+	}
+	captureFrame(track) {
+		let imageCapture = new ImageCapture(track)
+		console.log(imageCapture)
+		imageCapture.grabFrame()
+		.then(imageBitmap => {
+			const canvas = document.getElementById('myCanvas');
+			this.drawCanvas(canvas, imageBitmap);
+		})
+		.catch(error => ChromeSamples.log(error));
+	}
+	drawCanvas(canvas, img) {
+	  canvas.width = getComputedStyle(canvas).width.split('px')[0];
+	  canvas.height = getComputedStyle(canvas).height.split('px')[0];
+	  let ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
+	  let x = (canvas.width - img.width * ratio) / 2;
+	  let y = (canvas.height - img.height * ratio) / 2;
+	  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+	  canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height,
+	      x, y, img.width * ratio, img.height * ratio);
 	}
 	releaseStreamFromVideo() {
 		this.refs.app.querySelector('video').src = '';
@@ -119,6 +143,7 @@ class VideoExample extends React.Component {
 
 						<p>Streaming test</p>
 						<video autoPlay></video>
+						<canvas id="myCanvas"></canvas>
 					</div>
 				} />
 			</div>
