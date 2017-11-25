@@ -8,6 +8,7 @@ const express = require('express'),
   cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
   utils = require('./app/src/utils'),
+  axios = require('axios'),
   BASE_PATH = `${__dirname}/app`,
   ENV = process.env.NODE_ENV || 'development',
   DEFAULT_PORT = 3001,
@@ -86,7 +87,28 @@ io.on('connection', (client) => {
   });
 });
 
-
+axios({
+  method: 'post',
+  url: 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect',
+  data: {
+    url: 'https://i2.wp.com/www.pituitaryworldnews.org/wp-content/uploads/2014/10/Fotolia_48571549_Subscription_Monthly_M.jpg'
+  },
+  headers: {
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': '05692e05d5994a2ba4053c9cbd1d65d5',
+    },
+  params: {
+    'returnFaceId': 'true',
+    'returnFaceLandmarks': 'false',
+    'returnFaceAttributes': 'headPose,emotion,blur,exposure,noise',
+  },
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 
 // const websocket = socketio(server)
 
