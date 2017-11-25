@@ -10,7 +10,8 @@ const express = require('express'),
   utils = require('./app/src/utils'),
   BASE_PATH = `${__dirname}/app`,
   ENV = process.env.NODE_ENV || 'development',
-  DEFAULT_PORT = 3001
+  DEFAULT_PORT = 3001,
+  SOCKET_PORT = 8000;
 
 /* Configuration */
 app.set('views', `${BASE_PATH}/views`)
@@ -62,20 +63,21 @@ server.on('listening', (err) => {
   debug('DeepEval is alive on ' + bind)
 })
 
+/**
+ * Init websockets
+ */
 const io = socketio(server);
+io.listen(SOCKET_PORT);
+console.log('Listening on SOCKET_PORT ', SOCKET_PORT);
 
 io.on('connection', (client) => {
-  client.on('subscribeToTimer', (interval) => {
-    console.log('client is subscribing to timer with interval ', interval);
-    setInterval(() => {
-      client.emit('timer', new Date());
-    }, interval);
+  client.on('imagePost', (imgData) => {
+    console.log('image posted');
+    // TODO: send for analysis
   });
 });
 
-const port = 8000;
-io.listen(port);
-console.log('listening on port ', port);
+
 
 // const websocket = socketio(server)
 

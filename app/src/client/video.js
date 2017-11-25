@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MediaCapturer from 'react-multimedia-capture';
+import imageBus from './socket';
 
 class VideoExample extends React.Component {
 	constructor() {
@@ -8,7 +9,8 @@ class VideoExample extends React.Component {
 			granted: false,
 			rejectedReason: '',
 			recording: false,
-			paused: false
+			paused: false,
+      emotionData: {}
 		};
 
 		this.handleGranted = this.handleGranted.bind(this);
@@ -78,6 +80,18 @@ class VideoExample extends React.Component {
 			video.src = stream;
 		}
 	}
+  postImageUpdateEmotionData(img64) {
+    let data = {
+      uri: img64
+    }
+    imageBus(data, (err, results) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      this.setState({emotionData: results})
+    })
+  }
 	captureFrame(track) {
 		let imageCapture = new ImageCapture(track)
 		console.log(imageCapture)
@@ -86,9 +100,9 @@ class VideoExample extends React.Component {
 			console.log(imageBitmap)
 			const canvas = document.getElementById('myCanvas');
 			this.drawCanvas(canvas, imageBitmap);
-			console.log(canvas.toDataURL())
+      this.postImageUpdateEmotionData(canvas.toDataURL());
 		})
-		.catch(error => ChromeSamples.log(error));
+		.catch(error => console.error(error));
 	}
 	drawCanvas(canvas, img) {
 	  canvas.width = getComputedStyle(canvas).width.split('px')[0];
