@@ -74,6 +74,7 @@ io.on('connection', (client) => {
   client.on('imagePost', (imgData) => {
     console.log('image posted');
     // TODO: send for analysis
+    console.log(imgData)
   });
 });
 
