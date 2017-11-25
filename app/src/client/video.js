@@ -83,8 +83,10 @@ class VideoExample extends React.Component {
 		console.log(imageCapture)
 		imageCapture.grabFrame()
 		.then(imageBitmap => {
+			console.log(imageBitmap)
 			const canvas = document.getElementById('myCanvas');
 			this.drawCanvas(canvas, imageBitmap);
+			console.log(canvas.toDataURL())
 		})
 		.catch(error => ChromeSamples.log(error));
 	}
