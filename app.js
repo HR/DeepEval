@@ -74,7 +74,15 @@ io.on('connection', (client) => {
   client.on('imagePost', (imgData) => {
     console.log('image posted');
     // TODO: send for analysis
-    console.log(imgData)
+    // console.log(imgData.uri)
+    if (typeof Buffer.from === "function") {
+    // Node 5.10+
+        buf = Buffer.from(imgData.uri, 'base64'); // Ta-da
+    } else {
+        // older Node versions
+        buf = new Buffer(imgData.uri, 'base64'); // Ta-da
+    }
+    console.log(buf)
   });
 });
 
