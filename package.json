@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "cat ./new.deepeval && node spawn.js",
+    "start": "cat ./new.deepeval && node app.js",
     "dev": "cat ./new.deepeval && gulp",
     "test": "echo \"TODO\""
   },

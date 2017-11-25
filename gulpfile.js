@@ -27,7 +27,7 @@ gulp.task('nodemon', function (cb) {
     file: '.env'
   })
   return nodemon({
-    script: './spawn.js',
+    script: './app.js',
     watch: ['./**/*.js'],
     ignore: [
       'test/',
