@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import MediaCapturer from 'react-multimedia-capture';
 import imageBus from './socket';
 import RaisedButton from 'material-ui/RaisedButton';
+import FaPlay from 'react-icons/lib/fa/play';
+import FaPause from 'react-icons/lib/fa/pause';
+
 
 class VideoExample extends React.Component {
 	constructor() {
@@ -137,9 +140,9 @@ class VideoExample extends React.Component {
 
 		return (
 			<div ref="app">
-				<h3>Video Recorder</h3>
+				<h2>Video Recorder</h2>
 				<MediaCapturer
-					constraints={{ audio: true, video: true }}
+					constraints={{audio: true, video: true }}
 					timeSlice={10}
 					onGranted={this.handleGranted}
 					onDenied={this.handleDenied}
@@ -150,18 +153,21 @@ class VideoExample extends React.Component {
 					onError={this.handleError}
 					render={({ start, stop, pause, resume }) =>
 					<div>
-						<p>Granted: {granted.toString()}</p>
+						{/* <p>Granted: {granted.toString()}</p>
 						<p>Rejected Reason: {rejectedReason}</p>
 						<p>Recording: {recording.toString()}</p>
-						<p>Paused: {paused.toString()}</p>
-						<RaisedButton onClick={start} label="Start" />
-						<RaisedButton onClick={stop} label="Stop" />
-						<RaisedButton onClick={pause} label="Pause" />
-						<RaisedButton onClick={resume} label="Resume" />
+						<p>Paused: {paused.toString()}</p> */}
 
-						<p>Streaming test: {'this.state.emotionData'}</p>
+						{/* <p>Live Stream: {'this.state.emotionData'}</p> */}
 						<video autoPlay></video>
-						<canvas id="myCanvas"></canvas>
+						<div style={{paddingTop: -50}}>
+							<FaPlay size={50} onClick={start} />
+							<FaPause size={50} onClick={stop} />
+						</div>
+						<canvas id="myCanvas" style={{display: 'none'}}></canvas>
+
+						{/* <RaisedButton onClick={pause} label="Pause" />
+						<RaisedButton onClick={resume} label="Resume" /> */}
 					</div>
 				} />
 			</div>
