@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import VideoExample from './video';
-import { subscribeToTimer } from './socket';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AreaChart from './chart'
 
