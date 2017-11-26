@@ -34,6 +34,39 @@ if (ENV === 'development') {
   app.use(logger())
 }
 
+// app.locals = {
+//   accEmotions: {
+//     anger: 0,
+//     contempt: 0,
+//     disgust: 0,
+//     fear: 0,
+//     happiness: 0,
+//     neutral: 0,
+//     sadness: 0,
+//     surprise: 0
+//   },
+//   lecturer: {
+//     overall: {
+//       emotion: '',
+//       emotionData: []
+//     },
+//     lectures: [
+//       {
+//         date: '',
+//         emotion: '',
+//         emotionData: [],
+//         series: [
+//           {
+//             time: '',
+//             emotion: '',
+//             emotionData: []
+//           }
+//         ]
+//       }
+//     ]
+//   }
+// }
+
 app.locals = {
   accEmotions: {
     anger: 0,
@@ -50,20 +83,16 @@ app.locals = {
       emotion: '',
       emotionData: []
     },
-    lectures: [
-      {
-        date: '',
-        emotion: '',
-        emotionData: [],
-        series: [
+    lecture: {
+        frames: [
           {
             time: '',
             emotion: '',
             emotionData: []
           }
-        ]
-      }
-    ]
+        ],
+        count: 0,
+    }
   }
 }
 
@@ -107,7 +136,7 @@ console.log('Listening on SOCKET_PORT ', SOCKET_PORT);
 
 io.on('connection', (client) => {
   client.on('imagePost', (imgData) => {
-    console.log('timestamp:', imgData.timestamp)
+    // console.log('timestamp:', imgData.timestamp)
 
     axios({
       method: 'post',
@@ -125,19 +154,31 @@ io.on('connection', (client) => {
       })
       .then(function (response) {
         let faceData = response.data
-        if (faceData.length < 0) return;
+        // console.log(faceData)
+        if (faceData.length <= 0) {
+          // console.log(faceData.length)
+          return;
+        }
         // Only include attentive faces
-        let attentiveFaces = faceData.filter((item) => {
-          return parseInt(item['headPose']['pitch']) == 0;
-        });
+        // let attentiveFaces = faceData.filter((item) => {
+        //   return parseInt(item['headPose']['pitch']) == 0;
+        // });
+        let attentiveFaces = faceData
+        app.locals.lecturer.lecture.count = app.locals.lecturer.lecture.count + 1
+
+        // console.log(attentiveFaces)
+        // console.log(app.locals.lecturer.lecture.count)
 
         attentiveFaces.forEach(elem => {
           for (let prop in elem['faceAttributes']['emotion']) {
-            app.locals.accEmotions[prop] = (app.locals.accEmotions[prop] + elem['faceAttributes']['emotion'][prop])/2
+            app.locals.accEmotions[prop] = ((app.locals.lecturer.lecture.count - 1)*app.locals.accEmotions[prop] + elem['faceAttributes']['emotion'][prop])/app.locals.lecturer.lecture.count
+            // console.log(prop)
+            if(prop === 'happiness') {console.log('Instant:', elem['faceAttributes']['emotion'][prop])}
           }
         });
 
-        console.log(require('util').inspect(app.locals.accEmotions, { depth: null }));
+        // console.log(require('util').inspect(app.locals.accEmotions, { depth: null }));
+        console.log('Accumulated:', app.locals.accEmotions.happiness)
 
         client.emit('results', 'Hello Man!!')
       })

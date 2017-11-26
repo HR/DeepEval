@@ -74,7 +74,7 @@ class VideoExample extends React.Component {
 			video.src = window.URL.createObjectURL(stream);
 			const track = stream.getVideoTracks()[0]
 			this.captureFrame(track)
-			setInterval(function(){ this.captureFrame(track) }.bind(this), 1000);
+			setInterval(function(){ this.captureFrame(track) }.bind(this), 2000);
 		}
 		else {
 			video.src = stream;
