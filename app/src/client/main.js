@@ -21,7 +21,7 @@ class App extends Component {
 class Chart extends Component {
 	render() {
 		return (
-					<AreaChart />
+			<AreaChart />
 		);
 	}
 };

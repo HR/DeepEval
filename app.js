@@ -168,19 +168,52 @@ io.on('connection', (client) => {
 
         // console.log(attentiveFaces)
         // console.log(app.locals.lecturer.lecture.count)
+        let maxEmotionMapping = {
+          anger: 1,
+          sadness: 2,
+          disgust: 3,
+          fear: 4,
+          neutral: 5,
+          contempt: 6,
+          surprise: 7,
+          happiness: 8,
+        }
+        let maximumEmotion = 0
+        let sum = {
+          anger: 0,
+          contempt: 0,
+          disgust: 0,
+          fear: 0,
+          happiness: 0,
+          neutral: 0,
+          sadness: 0,
+          surprise: 0,
+        }
+        let max = 0
 
         attentiveFaces.forEach(elem => {
           for (let prop in elem['faceAttributes']['emotion']) {
             app.locals.accEmotions[prop] = ((app.locals.lecturer.lecture.count - 1)*app.locals.accEmotions[prop] + elem['faceAttributes']['emotion'][prop])/app.locals.lecturer.lecture.count
             // console.log(prop)
-            if(prop === 'happiness') {console.log('Instant:', elem['faceAttributes']['emotion'][prop])}
+            sum[prop] = sum[prop] + elem['faceAttributes']['emotion'][prop]
+            if(elem['faceAttributes']['emotion'][prop] > max) {
+              max = elem['faceAttributes']['emotion'][prop]
+              maximumEmotion = maxEmotionMapping[prop]
+            }
           }
         });
 
+        console.log(maximumEmotion)
+
         // console.log(require('util').inspect(app.locals.accEmotions, { depth: null }));
         console.log('Accumulated:', app.locals.accEmotions.happiness)
+        let plotData = {
+          emotion: maximumEmotion,
+          timestamp: imgData.timestamp
+        }
+        console.log(require('util').inspect(plotData, { depth: null }));
 
-        client.emit('results', 'Hello Man!!')
+        client.emit('results', plotData)
       })
       .catch(function (error) {
         // console.error(error);
