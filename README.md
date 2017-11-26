@@ -7,4 +7,4 @@ Structure:
 - `dev` - main development branch
 - `{YOUR_NAME}/{ISSUE}-{FEATURE_NAME}` - feature branch
 
-You should work on your feature branch until you have implemented it at which point you land it onto `dev` via a merge or, preferably, a rebase. Once `dev` is release-ready it is landed onto `master`.
+A web platform where professors can track crowd emotions and interactivity in real-time,with an overall real-time satisfaction of the lecture as well as instant access to records of previous lectures.
