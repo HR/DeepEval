@@ -154,7 +154,7 @@ io.on('connection', (client) => {
       })
       .then(function (response) {
         let faceData = response.data
-        // console.log(faceData)
+        console.log('Hello Man!!')
         if (faceData.length <= 0) {
           // console.log(faceData.length)
           return;
