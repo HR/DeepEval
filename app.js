@@ -34,6 +34,39 @@ if (ENV === 'development') {
   app.use(logger())
 }
 
+app.locals = {
+  accEmotions: {
+    anger: 0,
+    contempt: 0,
+    disgust: 0,
+    fear: 0,
+    happiness: 0,
+    neutral: 0,
+    sadness: 0,
+    surprise: 0
+  },
+  lecturer: {
+    overall: {
+      emotion: '',
+      emotionData: []
+    },
+    lectures: [
+      {
+        date: '',
+        emotion: '',
+        emotionData: [],
+        series: [
+          {
+            time: '',
+            emotion: '',
+            emotionData: []
+          }
+        ]
+      }
+    ]
+  }
+}
+
 /**
  * Get port from environment and use it for Express.
  */
@@ -74,7 +107,6 @@ console.log('Listening on SOCKET_PORT ', SOCKET_PORT);
 
 io.on('connection', (client) => {
   client.on('imagePost', (imgData) => {
-    console.log('image posted');
     console.log('timestamp:', imgData.timestamp)
 
     axios({
@@ -92,11 +124,25 @@ io.on('connection', (client) => {
       },
       })
       .then(function (response) {
-        console.log(response.data);
+        let faceData = response.data
+        if (faceData.length < 0) return;
+        // Only include attentive faces
+        let attentiveFaces = faceData.filter((item) => {
+          return parseInt(item['headPose']['pitch']) == 0;
+        });
+
+        attentiveFaces.forEach(elem => {
+          for (let prop in elem['faceAttributes']['emotion']) {
+            app.locals.accEmotions[prop] = (app.locals.accEmotions[prop] + elem['faceAttributes']['emotion'][prop])/2
+          }
+        });
+
+        console.log(require('util').inspect(app.locals.accEmotions, { depth: null }));
+
         client.emit('results', 'Hello Man!!')
       })
       .catch(function (error) {
-        console.error(error);
+        // console.error(error);
       });
   });
 });
