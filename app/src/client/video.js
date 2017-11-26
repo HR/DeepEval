@@ -160,7 +160,7 @@ class VideoExample extends React.Component {
 
 						{/* <p>Live Stream: {'this.state.emotionData'}</p> */}
 						<video autoPlay></video>
-						<canvas id="myCanvas"></canvas>
+						<canvas id="myCanvas" style={{visibility: 'hidden', position: 'absolute'}}></canvas>
 						<div style={{paddingTop: -50}}>
 							<FaPlay size={50} onClick={start} />
 							<FaPause size={50} onClick={stop} />
