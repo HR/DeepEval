@@ -2,23 +2,26 @@ import React from 'react';
 import {AreaChart} from 'react-easy-chart';
 
 function AChart(props) {
+  let dataObject = props.eData.map((el,i) => {
+    // let t = new Date(el.timestamp).toUTC()
+    return {x: i, y: el.emotion}
+  })
+  console.log(dataObject)
   return(
-    <AreaChart
-    width={700}
-    height={250}
-    interpolate={'cardinal'}
-    data={[
-      [
-        { x: 1, y: 20 },
-        { x: 2, y: 10 },
-        { x: 3, y: 25 }
-      ], [
-        { x: 1, y: 10 },
-        { x: 2, y: 12 },
-        { x: 3, y: 4 }
-      ]
-    ]}
-  />
+    <div>
+      <p>Hello:</p>
+      <AreaChart
+        // xType={'time'}
+        width={700}
+        height={250}
+        interpolate={'cardinal'}
+        xDomainRange={[0, 100]}
+        yDomainRange={[1, 10]}
+        data={[
+          dataObject
+        ]}
+      />
+    </div>
   )
 }
 

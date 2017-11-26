@@ -93,8 +93,9 @@ class VideoExample extends React.Component {
         console.error(err);
         return;
       }
-      this.setState({emotionData: results})
-			console.log(results)
+      // this.setState({emotionData: results})
+			this.props.onDataPush(results)
+			// console.log(results)
     })
   }
 	captureFrame(track) {
