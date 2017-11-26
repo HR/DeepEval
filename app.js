@@ -75,39 +75,29 @@ console.log('Listening on SOCKET_PORT ', SOCKET_PORT);
 io.on('connection', (client) => {
   client.on('imagePost', (imgData) => {
     console.log('image posted');
-    // TODO: send for analysis
-    // console.log(imgData.uri)
-    // if (typeof Buffer.from === "function") {
-    // // Node 5.10+
-    //     buf = Buffer.from(imgData.uri, 'base64'); // Ta-da
-    // } else {
-    //     // older Node versions
-    //     buf = new Buffer(imgData.uri, 'base64'); // Ta-da
-    // }
 
-    console.log('imgData: ',imgData);
+    console.log('imgData: ',imgData.uri);
 
-    // axios({
-    //   method: 'post',
-    //   url: consts.endpoints.faceAPI,
-    //   data: {url: "https://i2.wp.com/www.pituitaryworldnews.org/wp-content/uploads/2014/10/Fotolia_48571549_Subscription_Monthly_M.jpg?fit=1378%2C1378"},
-    //   headers: {
-    //         'Content-Type': 'application/octet-stream',
-    //         // 'Content-Type': 'application/json',
-    //         'Ocp-Apim-Subscription-Key': '05692e05d5994a2ba4053c9cbd1d65d5'
-    //     },
-    //   params: {
-    //     'returnFaceId': 'true',
-    //     'returnFaceLandmarks': 'false',
-    //     'returnFaceAttributes': 'headPose,emotion,blur,exposure,noise',
-    //   },
-    //   })
-    //   .then(function (response) {
-    //     console.log(response.body);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
+    axios({
+      method: 'post',
+      url: consts.endpoints.faceAPI,
+      data: imgData.uri,
+      headers: {
+            'Content-Type': 'application/octet-stream',
+            'Ocp-Apim-Subscription-Key': process.env.SUB_KEY
+        },
+      params: {
+        'returnFaceId': 'true',
+        'returnFaceLandmarks': 'false',
+        'returnFaceAttributes': 'headPose,emotion,blur,exposure,noise',
+      },
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   });
 });
 

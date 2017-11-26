@@ -3,3 +3,4 @@ npm-debug.*
 .env
 .DS_Store
 public/main.js
+.env.json

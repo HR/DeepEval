@@ -1,5 +1,5 @@
 module.exports = {
   endpoints: {
-    faceAPI: 'https://westeurope.api.cognitive.microsoft.com/face/v1.0/detect'
+    faceAPI: 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect'
   }
 }

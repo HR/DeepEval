@@ -45,7 +45,7 @@ function runCommand (command) {
 gulp.task('nodemon', function (cb) {
   var called = false
   env({
-    file: '.env'
+    file: '.env.json'
   })
   return nodemon({
     script: './app.js',
