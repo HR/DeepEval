@@ -194,7 +194,7 @@ io.on('connection', (client) => {
 
         attentiveFaces.forEach(elem => {
           for (let prop in elem['faceAttributes']['emotion']) {
-            app.locals.accEmotions[prop] = avg(app.locals.lecturer.lecture.count, app.locals.accEmotions[prop], elem['faceAttributes']['emotion'][prop]))
+            app.locals.accEmotions[prop] = avg(app.locals.lecturer.lecture.count, app.locals.accEmotions[prop], elem['faceAttributes']['emotion'][prop])
             // console.log(prop)
             sum[prop] = sum[prop] + elem['faceAttributes']['emotion'][prop]
             if(elem['faceAttributes']['emotion'][prop] > max) {
