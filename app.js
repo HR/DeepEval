@@ -13,7 +13,8 @@ const express = require('express'),
   BASE_PATH = `${__dirname}/app`,
   ENV = process.env.NODE_ENV || 'development',
   DEFAULT_PORT = 3001,
-  SOCKET_PORT = 8000;
+  SOCKET_PORT = 8000,
+  EMOTION_FPS = 5; // return the analysed data after n frames
 
 /* Configuration */
 app.set('views', `${BASE_PATH}/views`)
@@ -80,19 +81,16 @@ app.locals = {
   },
   lecturer: {
     overall: {
-      emotion: '',
-      emotionData: []
+      emotion: ''
     },
     lecture: {
-        frames: [
-          {
-            time: '',
-            emotion: '',
-            emotionData: []
-          }
-        ],
+        accFrames: EMOTION_FPS,
+        date: '',
+        emotion: '',
+        timeline: [],
         count: 0,
-    }
+        avgcount: 0
+      }
   }
 }
 
@@ -154,7 +152,6 @@ io.on('connection', (client) => {
       })
       .then(function (response) {
         let faceData = response.data
-        console.log('Hello Man!!')
         if (faceData.length <= 0) {
           // console.log(faceData.length)
           return;
@@ -164,7 +161,7 @@ io.on('connection', (client) => {
         //   return parseInt(item['headPose']['pitch']) == 0;
         // });
         let attentiveFaces = faceData
-        app.locals.lecturer.lecture.count = app.locals.lecturer.lecture.count + 1
+        app.locals.lecturer.lecture.count++;
 
         // console.log(attentiveFaces)
         // console.log(app.locals.lecturer.lecture.count)
@@ -191,9 +188,13 @@ io.on('connection', (client) => {
         }
         let max = 0
 
+        function avg(count, x1, x2) {
+          return ((count-1)*x1+x2)/2
+        }
+
         attentiveFaces.forEach(elem => {
           for (let prop in elem['faceAttributes']['emotion']) {
-            app.locals.accEmotions[prop] = ((app.locals.lecturer.lecture.count - 1)*app.locals.accEmotions[prop] + elem['faceAttributes']['emotion'][prop])/app.locals.lecturer.lecture.count
+            app.locals.accEmotions[prop] = avg(app.locals.lecturer.lecture.count, app.locals.accEmotions[prop], elem['faceAttributes']['emotion'][prop])
             // console.log(prop)
             sum[prop] = sum[prop] + elem['faceAttributes']['emotion'][prop]
             if(elem['faceAttributes']['emotion'][prop] > max) {
@@ -202,18 +203,28 @@ io.on('connection', (client) => {
             }
           }
         });
-
-        console.log(maximumEmotion)
-
-        // console.log(require('util').inspect(app.locals.accEmotions, { depth: null }));
-        console.log('Accumulated:', app.locals.accEmotions.happiness)
-        let plotData = {
-          emotion: maximumEmotion,
-          timestamp: imgData.timestamp
-        }
         console.log(require('util').inspect(plotData, { depth: null }));
 
-        client.emit('results', plotData)
+
+        if (--app.locals.lecturer.lecture.accFrames < 0) {
+          let plotData = {
+            emotion: maximumEmotion,
+            timestamp: imgData.timestamp
+          }
+
+          app.locals.lecturer.lecture.timeline.append(plotData)
+          app.locals.lecturer.lecture.avgcount++;
+          app.locals.lecturer.lecture.emotion = app.locals.lecturer.overall.emotion = avg(app.locals.lecturer.lecture.avgcount, app.locals.lecturer.lecture.emotion, maximumEmotion)
+
+
+
+          // Reset the accumlated frames
+          app.locals.lecturer.lecture.accFrames = EMOTION_FPS
+
+          // send back off to client
+          client.emit('results', plotData)
+        }
+
       })
       .catch(function (error) {
         // console.error(error);
