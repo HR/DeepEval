@@ -4,4 +4,3 @@ npm-debug.*
 .DS_Store
 public/main.js
 .env.json
-.DS_Store

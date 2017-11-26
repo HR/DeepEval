@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import VideoExample from './video';
 import { subscribeToTimer } from './socket';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AreaChart from './chart'
 
 class App extends Component {
 	render() {
@@ -17,7 +18,20 @@ class App extends Component {
 	}
 };
 
+class Chart extends Component {
+	render() {
+		return (
+					<AreaChart />
+		);
+	}
+};
+
 ReactDOM.render(
 	<App />,
 	document.getElementById('entry')
+);
+
+ReactDOM.render(
+	<Chart />,
+	document.getElementById('well')
 );

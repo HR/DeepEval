@@ -117,7 +117,7 @@ server.listen(PORT)
  * Server event handling
  */
 server.on('error', (err) => {
-  throw error
+  throw err
 })
 server.on('listening', (err) => {
   let addr = server.address()
