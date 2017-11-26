@@ -75,6 +75,7 @@ console.log('Listening on SOCKET_PORT ', SOCKET_PORT);
 io.on('connection', (client) => {
   client.on('imagePost', (imgData) => {
     console.log('image posted');
+    console.log('timestamp:', imgData.timestamp)
 
     axios({
       method: 'post',

@@ -82,7 +82,8 @@ class VideoExample extends React.Component {
 	}
   postImageUpdateEmotionData(img64) {
     let data = {
-      uri: img64
+      uri: img64,
+			timestamp: new Date().getTime(),
     }
     imageBus(data, (err, results) => {
       if (err) {
