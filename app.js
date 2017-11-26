@@ -76,8 +76,6 @@ io.on('connection', (client) => {
   client.on('imagePost', (imgData) => {
     console.log('image posted');
 
-    console.log('imgData: ',imgData.uri);
-
     axios({
       method: 'post',
       url: consts.endpoints.faceAPI,
@@ -93,10 +91,11 @@ io.on('connection', (client) => {
       },
       })
       .then(function (response) {
-        console.log(response);
+        console.log(response.data);
+        client.emit('results', 'Hello Man!!')
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
   });
 });
